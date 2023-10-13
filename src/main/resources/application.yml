@@ -1,0 +1,17 @@
+server:
+    port: 9000
+
+spring:
+    application:
+        name: AuthenticationServerPOC2
+
+    datasource:
+        url: jdbc:postgresql://localhost:5432/authserver
+        driver-class-name: org.postgresql.Driver
+        username:
+        password:
+
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        database: postgresql
+        show-sql: true
