@@ -1,4 +1,4 @@
-package cl.gfmn.authserver.entity;
+package cl.gfmn.authserver.core.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Table(name = "users")
 @Entity
-public class UserEntity implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,22 +33,22 @@ public class UserEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "expired")
-    private Boolean expired;
+    @Column(name = "non_expired")
+    private Boolean nonExpired;
 
-    @Column(name = "locked")
-    private Boolean locked;
+    @Column(name = "non_locked")
+    private Boolean nonLocked;
 
     @Column(name = "enabled")
     private Boolean enabled;
 
     //Table 'users' is the owner of the Many-to-Many relationship with 'authorities'
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "users_authorities",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
-    private Set<AuthorityEntity> authorities = new HashSet<>();
+    private Set<Authority> authorities = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,17 +69,17 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return expired;
+        return nonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return locked;
+        return nonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return expired;
+        return true;
     }
 
     @Override
